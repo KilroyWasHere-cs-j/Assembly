@@ -1,21 +1,54 @@
 global _start
 
+section .data
+  msg db 'Hello World', 0xa
+
+section .bss
+  buf resb 64
+
 section .text
 
+hold:
+  mov rax, 1
+  mov rdi, 1
+  mov rsi, buf
+  mov rdx, 64
+  syscall
+
+foo:
+  mov rax, 1
+  mov rdi, 1
+  mov rsi, msg
+  mov rdx, 11
+  syscall
+
 _start:
-    mov rax, 1 ; sys_write
-    mov rdi, 1 ; stdout
-    mov rsi, msg
-    mov rdx, 13 ; length of msg
 
+    ; read from console
+    mov rax, 0
+    mov rdi, 0
+    mov rsi, buf
+    mov rdx, 64 
     syscall
 
-    ; exit
+    ; write read value to console
+    ;mov rax, 1
+    ;mov rdi, 1
+    ;mov rsi, buf
+    ;mov rdx, 64
+    ;syscall
+
+   mov eax, 2 
+   mov edx, 2
+
+   ; compairs eax to edx and if it's true it jumps hold
+   cmp eax, edx
+   je hold
+
+   cmp eax, edx
+   jz foo
+ 
+    ; exit program
     mov rax, 60
-    xor rdi, rdi
+    mov rsi, rsi
     syscall
-
-
-section   .data
-
-    msg: db  "Hello, world", 10
